@@ -17,7 +17,7 @@
     KERNEL_TARGET="zImage"
 
   # kernel serial console
-    EXTRA_CMDLINE="console=ttymxc0,115200 console=tty0"
+    EXTRA_CMDLINE="console=ttymxc0,115200 console=tty0 video=HDMI-A-1:1920x1080@60"
 
   # debug tty path
     DEBUG_TTY="/dev/ttymxc0"
