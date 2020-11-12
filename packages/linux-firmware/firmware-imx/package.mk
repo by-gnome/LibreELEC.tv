@@ -7,10 +7,10 @@ PKG_VERSION="7.9"
 PKG_SHA256="30e22c3e24a8025d60c52ed5a479e30fad3ad72127c84a870e69ec34e46ea8c0"
 PKG_ARCH="arm"
 PKG_LICENSE="other"
-PKG_SITE="http://www.freescale.com"
+PKG_SITE="https://www.nxp.com"
 PKG_URL="https://www.nxp.com/lgfiles/NMG/MAD/YOCTO/${PKG_NAME}-${PKG_VERSION}.bin"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="firmware-imx: Freescale IMX firmware such as for the VPU"
+PKG_LONGDESC="NXP iMX firmware such as for the VPU"
 PKG_TOOLCHAIN="manual"
 
 unpack() {
@@ -22,7 +22,7 @@ makeinstall_target() {
   mkdir -p $INSTALL/$(get_full_firmware_dir)/imx/sdma
     cp -P firmware/sdma/sdma-imx6q.bin $INSTALL/$(get_full_firmware_dir)/imx/sdma
 
-  mkdir -p $INSTALL/$(get_full_firmware_dir)/vpu
-    cp -P firmware/vpu/vpu_fw_imx6d.bin $INSTALL/$(get_full_firmware_dir)/vpu
-    cp -P firmware/vpu/vpu_fw_imx6q.bin $INSTALL/$(get_full_firmware_dir)/vpu
+  mkdir -p $INSTALL/$(get_full_firmware_dir)
+    cp -P firmware/vpu/vpu_fw_imx6d.bin $INSTALL/$(get_full_firmware_dir)
+    cp -P firmware/vpu/vpu_fw_imx6q.bin $INSTALL/$(get_full_firmware_dir)
 }
