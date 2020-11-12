@@ -1,0 +1,58 @@
+Add MMC power sequence for usdhc2.
+Add bluetooth node to uart3.
+
+--- a/arch/arm/boot/dts/imx6qdl-wandboard-revc1.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-wandboard-revc1.dtsi
+@@ -6,6 +6,13 @@
+ 
+ #include "imx6qdl-wandboard.dtsi"
+ 
++/ {
++	pwrseq_usdhc2: usdhc2pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio1 26 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;		/* WL_REG_ON */
++	};
++};
++
+ &iomuxc {
+ 	pinctrl-0 = <&pinctrl_hog>;
+ 
+@@ -14,13 +21,13 @@
+ 			fsl,pins = <
+ 				MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x80000000	/* uSDHC1 CD */
+ 				MX6QDL_PAD_EIM_DA9__GPIO3_IO09		0x80000000	/* uSDHC3 CD */
+-				MX6QDL_PAD_CSI0_DAT14__GPIO6_IO00	0x0f0b0		/* WIFI_ON (reset, active low) */
+- 				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x000b0		/* WL_REG_ON (unused) */
++				MX6QDL_PAD_CSI0_DAT14__GPIO6_IO00	0x80000000	/* WIFI_ON (WL_TRST_N) (unused) */
++ 				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x0b8b0		/* WL_REG_ON */
+ 				MX6QDL_PAD_ENET_TXD1__GPIO1_IO29	0x80000000	/* WL_HOST_WAKE, input */
+ 				MX6QDL_PAD_CSI0_DAT13__GPIO5_IO31	0x0f0b0		/* GPIO5_IO31 (Wifi Power Enable) */
+ 				MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x80000000	/* WL_WAKE (unused) */
+-				MX6QDL_PAD_CSI0_VSYNC__GPIO5_IO21	0x80000000	/* BT_ON */
+-				MX6QDL_PAD_CSI0_DAT12__GPIO5_IO30	0x80000000	/* BT_WAKE */
++				MX6QDL_PAD_CSI0_VSYNC__GPIO5_IO21	0x0b8b0		/* BT_ON (BT_RST_N) */
++				MX6QDL_PAD_CSI0_DAT12__GPIO5_IO30	0x0b8b0		/* BT_WAKE (BT_REG_ON) */
+ 				MX6QDL_PAD_CSI0_DATA_EN__GPIO5_IO20	0x80000000	/* BT_HOST_WAKE */
+ 				MX6QDL_PAD_EIM_D29__GPIO3_IO29		0x80000000	/* RGMII_nRST */
+ 			>;
+@@ -28,8 +35,20 @@
+ 	};
+ };
+ 
++/* UART3 - Connected to BRCM Wifi/BT/FM */
++&uart3 {
++	bluetooth {
++		compatible = "brcm,bcm4330-bt";
++		max-speed = <3000000>;
++		shutdown-gpios = <&gpio5 30 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>,	/* BT_REG_ON */
++				 <&gpio5 21 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;	/* BT_RST_N */
++	};
++};
++
++/* USDHC2 - Connected to BRCM Wifi/BT/FM */
+ &usdhc2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc2>;
++	mmc-pwrseq = <&pwrseq_usdhc2>;
+ 	status = "okay";
+ };
